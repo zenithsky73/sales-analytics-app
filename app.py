@@ -371,6 +371,7 @@ def menu_button(label):
 
     if st.sidebar.button(label, key=label, use_container_width=True):
         st.session_state.menu = label
+        st.session_state.account_page = None
         st.rerun()
 
 jabatan = st.session_state.jabatan.lower()
@@ -404,6 +405,12 @@ st.sidebar.markdown("<br>", unsafe_allow_html=True)
 # =========================
 # TOP RIGHT ACCOUNT MENU
 # =========================
+if "account_page" not in st.session_state:
+    st.session_state.account_page = None
+
+if "username" not in st.session_state:
+    st.session_state.username = ""
+
 def image_to_base64(path):
     with open(path, "rb") as img_file:
         return base64.b64encode(img_file.read()).decode()
@@ -444,17 +451,15 @@ with top_right:
             st.rerun()
 
 # =========================
-# HEADER UTAMA
-# =========================
-
-
-
-# =========================
 # ROUTER
 # =========================
+if st.session_state.account_page == "profile":
+    show_profile_page()
+    st.stop()
+
 if menu == "🏠 Home":
     show_home_page()
-
+    
 elif menu == "📊 Dashboard":
     show_dashboard()
 
