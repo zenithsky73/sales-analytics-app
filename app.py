@@ -309,6 +309,48 @@ h1, h2, h3 {
     justify-content: center;
     border: 3px solid #1E5FD8;
 }
+
+/* =========================
+   RESPONSIVE MOBILE
+========================= */
+@media (max-width: 768px) {
+
+    .block-container {
+        padding-left: 1rem !important;
+        padding-right: 1rem !important;
+        padding-top: 1rem !important;
+    }
+
+    [data-testid="stHorizontalBlock"] {
+        flex-direction: column !important;
+    }
+
+    [data-testid="column"] {
+        width: 100% !important;
+        flex: 1 1 100% !important;
+        margin-bottom: 1rem !important;
+    }
+
+    .header-title {
+        font-size: 28px !important;
+    }
+
+    .header-subtitle {
+        font-size: 14px !important;
+    }
+
+    .profile-menu-card {
+        width: 100% !important;
+    }
+
+    [data-testid="metric-container"] {
+        width: 100% !important;
+    }
+
+    iframe {
+        width: 100% !important;
+    }
+}
 </style>
 """, unsafe_allow_html=True)
 
