@@ -110,4 +110,4 @@ GitHub:
 https://github.com/zenithsky73
 
 LinkedIn:
-(Tambahkan link LinkedIn kamu)
+https://www.linkedin.com/in/zen7/
