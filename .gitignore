@@ -1,0 +1,14 @@
+__pycache__/
+*.pyc
+
+database.db
+*.db
+
+.env
+.streamlit/secrets.toml
+
+.venv/
+venv/
+
+uploads/
+temp/
