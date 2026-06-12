@@ -6,6 +6,8 @@ from io import BytesIO
 from utils.page_header import show_page_header
 from utils.pdf_report import generate_premium_executive_report
 from utils.ppt_report import generate_premium_ppt
+from utils.helper import get_revenue_column, get_staff_column
+
 def rupiah(value):
     return f"Rp {value:,.0f}".replace(",", ".")
 
@@ -24,13 +26,65 @@ def show_executive_report_page():
 
     df = st.session_state.clean_data.copy()
 
-    if "Revenue" in df.columns:
-        revenue_col = "Revenue"
-    elif "Sub Total" in df.columns:
-        revenue_col = "Sub Total"
-    elif "Total" in df.columns:
-        revenue_col = "Total"
-    else:
+    # =========================
+    # FILTER TANGGAL SAMA SEPERTI DASHBOARD
+    # =========================
+    if "Tanggal" in df.columns:
+        df["Tanggal"] = pd.to_datetime(df["Tanggal"], errors="coerce")
+
+        min_date = df["Tanggal"].min().date()
+        max_date = df["Tanggal"].max().date()
+
+        date_range = st.date_input(
+            "Pilih Rentang Tanggal",
+            value=(min_date, max_date),
+            min_value=min_date,
+            max_value=max_date,
+            key="executive_date_filter"
+        )
+
+        if isinstance(date_range, tuple) and len(date_range) == 2:
+            start_date, end_date = date_range
+
+            df = df[
+                (df["Tanggal"].dt.date >= start_date) &
+                (df["Tanggal"].dt.date <= end_date)
+            ]
+    
+    revenue_col = get_revenue_column(df)
+    staff_col = get_staff_column(df)
+    
+    if "Kategori" in df.columns:
+        kategori_list = sorted(df["Kategori"].dropna().unique())
+        selected_kategori = st.multiselect(
+            "Pilih Kategori",
+            kategori_list,
+            default=kategori_list,
+            key="executive_kategori_filter"
+        )
+        df = df[df["Kategori"].isin(selected_kategori)]
+
+    if "Metode Pembayaran" in df.columns:
+        payment_list = sorted(df["Metode Pembayaran"].dropna().unique())
+        selected_payment = st.multiselect(
+            "Pilih Metode Pembayaran",
+            payment_list,
+            default=payment_list,
+            key="executive_payment_filter"
+        )
+        df = df[df["Metode Pembayaran"].isin(selected_payment)]
+
+    if staff_col:
+        staff_list = sorted(df[staff_col].dropna().unique())
+        selected_staff = st.multiselect(
+            f"Pilih {staff_col}",
+            staff_list,
+            default=staff_list,
+            key="executive_staff_filter"
+        )
+        df = df[df[staff_col].isin(selected_staff)]
+
+    if revenue_col is None:
         st.error("Kolom revenue tidak ditemukan.")
         return
 
@@ -231,20 +285,6 @@ def show_executive_report_page():
     add_chart("Distribusi Metode Pembayaran", fig_payment)
     
     logo_path = "assets/logo_toleransi.png"
-
-    pdf_file = generate_premium_executive_report(
-        total_revenue=total_revenue,
-        total_transaksi=total_transaksi,
-        total_item=total_item,
-        aov=aov,
-        top_product=top_product.index[0],
-        top_category=top_category.index[0],
-        top_hour=top_hour.index[0],
-        top_payment=top_payment.index[0],
-        recommendations=recommendations,
-        chart_images=chart_images,
-        logo_path=logo_path if os.path.exists(logo_path) else None
-    )
 
     st.download_button(
         label="📄 Download Executive Report Premium PDF",
