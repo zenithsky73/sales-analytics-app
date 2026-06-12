@@ -1,3 +1,6 @@
+![Python](https://img.shields.io/badge/Python-3.11-blue)
+![Streamlit](https://img.shields.io/badge/Streamlit-App-red)
+![License](https://img.shields.io/badge/License-MIT-green)
 # 📊 Sales Analytics Platform
 
 Aplikasi analisis data penjualan berbasis Python dan Streamlit untuk membantu bisnis memahami performa penjualan, pola pembelian pelanggan, serta menghasilkan laporan eksekutif secara otomatis.
