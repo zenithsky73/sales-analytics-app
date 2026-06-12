@@ -24,7 +24,15 @@ def show_executive_report_page():
 
     df = st.session_state.clean_data.copy()
 
-    revenue_col = "Total" if "Total" in df.columns else "Sub Total"
+    if "Revenue" in df.columns:
+        revenue_col = "Revenue"
+    elif "Sub Total" in df.columns:
+        revenue_col = "Sub Total"
+    elif "Total" in df.columns:
+        revenue_col = "Total"
+    else:
+        st.error("Kolom revenue tidak ditemukan.")
+        return
 
     total_revenue = df[revenue_col].sum()
     total_transaksi = df["Nomor"].nunique()
